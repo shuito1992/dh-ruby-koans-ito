@@ -71,3 +71,110 @@ push,pop,unshift,shift
 150行 .scan()はマッチするすべての要素をリストにして返す。
 154行 .sub(){~~}はマッチした最初の要素に{}で指定された処理を施す。
 
+
+    @about_methods
+  
+36行 assert_raise(klass1, klass2,...)
+    ブロックを実行して例外が発生し、その例外がklass1, klass2,...のいずれかのクラスのインスタンスならパスする。パスしたときは、発生した例外を返します。
+    class ArgumentError 引数の数が合っていない、期待される値でないときに発生する。
+39,44行 assert_match1(/__/,exception.message)の答えがなにも入力しないことになっているがなぜか？
+104行 関数の前のself.はどういう役割か？
+    explicit receiver
+    privateの概念
+
+
+    @about_constants
+
+10行 about_constantsクラスの中だから、Cの値は"nested"となる。
+14行 二重コロン記法「::」
+    ドットと同様にメソッドの呼び出しに利用される。
+14行 何も指定せずに「::」をつけることで、グローバルな変数を指定できるようだ。
+
+
+    @about_control_statements
+
+62行 unlessの使い方。
+119行 nextはもっとも内側のループの次の繰り返しにジャンプする。
+129行 .upcaseメソッドは、文字列中の小文字を大文字に変えた文字列を返す。
+
+
+    @about_triangle_project
+
+if文もendで終了を明示する。
+
+
+    @about_exceptions
+
+9行 .ancestorsメソッドは、クラスの親クラスを配列にして返す。
+17行 begin-rescueはpythonでいうtry-except:とおなじようなものだ。
+    failは例外を発生させるメソッド
+38行 raise 例外を発生させるメソッド
+53行 ensure 例外の発生に関係なく実行される。
+
+
+    @about_triangle_project2
+
+if節を使い、条件に当てはまるときはraise TriangleErrorを実行する方法を利用した。
+
+
+    @about_iteration
+
+27行 .eachはarrayの要素をひとつずつ取り出す。
+58行 collectメソッドは、要素の数だけ繰り返しブロックを実行し、ブロックの戻り値を集めた配列を作成して返す。
+62行 mapメソッドはcollectと同じ。
+69行 selectメソッドは、条件に合う要素を探して集める。
+73行 find_allメソッドはselectと同じ。
+80行 findメソッドは、要素を探して取り出す。真を返したときは繰り返しを中断する。
+84行 injectメソッドは、ブロックを使って繰り返し計算を行う。ブロックに順に「前回の戻り値、要素」を渡す。メソッドの戻り値はブロックが最後に返した値になる。
+    引数initで初期値を指定できる。
+
+
+    @about_block
+
+5行 yield が書かれたメソッドに渡されたブロックを実行する。
+70行 lambdaは|~~|を渡してブロックの広報にある操作を施して返す関数と考えてよいか。
+    .call()はそれを実行する。
+80行 ここではmethod_with_block_argumentsのyieldである"Jim"が、ラムダ関数であるadd_oneによって処理され、全て大文字の"JIM"として返される。
+85行 関数の引数に&blockを置き、それを.call()する。その関数を呼び出すときに何かしらのblockを渡すことで、そのblockを実行する。
+
+
+    @about_sundwitch_codes
+
+標準入力からデータを受け取るにはgetsを用います。getsは標準入力から行単位で読み込みますが、行末の改行文字を取り除かないので注意してください。
+
+
+    @about_classes
+
+16行 classの中で「@」がつく変数をインスタンス変数と呼ぶ。オブジェクト指向言語において、オブジェクトのインスタンスごとに割り当てられた変数のことである。メンバ変数とも呼ばれる。
+22行 instance_variablesメソッドは、レシーバのオブジェクトが持っているインスタンス変数の名前を配列に入れて返す。
+46行 instance_variable_getメソッドは、レシーバが持っているインスタンス変数の値を返す。引数nameにはインスタンス変数の名前を:@titleや"@title"のようにシンボルか文字列で渡す。
+53行 instance_evalメソッドは、渡されたブロックをレシーバのインスタンスの元で実行する。ブロックの戻り値がメソッドの戻り値になる。
+attrはattribute(属性)の略。
+    「attr_reader」はインスタンス変数のゲッタのみを定義する。
+    「attr_writer」はインスタンス変数のセッタ飲みを定義する。
+    「attr_accessor」はセッタとゲッタを定義する。
+117行 Dog6.new("Figo")だけで、なぜinitialize()が実行されるのだろうか。
+    インスタンスメソッドの中で「initialize」と言う名前が付けられたメソッドは特殊なメソッド。このメソッドをクラス内に記述した場合にはオブジェクトが作成される時に自動的に呼び出される。
+153行 inspectメソッドは、オブジェクトを分かりやすい文字列にして返す。
+    ここではデフォルトでのinspectメソッドに代えて、"<Dog named '#{name}'>"という文字列を返すように上書きしている。
+162行 なぜget_selfで取ってきたselfが、inspectで定義したものと同じになるのか？
+
+** 次回は162行目からやる。
+158行  test_inside_a_method_self_refers_to_the_containing_object
+    は飛ばす。後で戻ってくる。
+    この問題はselfによって得られるインスタンスは、クラスによって得られるインスタンスと同じであることを問うているらしい。以下のstockoverflowを読むべし。
+    参照
+    https://stackoverflow.com/questions/32666702/ruby-koans-quest-203about-classes-failed-with-rake
+    http://w3cgeek.com/ruby-koans-where-are-the-quotes-in-this-return-value.html
+
+172行 #{~~}は変数展開などとも呼ばれ、RubyやPythonなどのモダンな言語で文字列内に変数の値を置くときに使われる定番の手法。
+出力時に自動的に.to_s(文字列型への変換)が行われる。
+187行 inspectメソッドは、オブジェクトを分かりやすい文字列にして返す。
+文字列のinspectメソッドに対する戻り値は、「"(\")」を正規表現で含んだものとなる。
+
+
+    @about_open_classes
+
+18行 すでに存在しているクラスをもう一度開き、関数などの情報を追加することができる。
+
+

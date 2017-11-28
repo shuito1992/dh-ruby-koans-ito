@@ -1,0 +1,87 @@
+RubyKoans classについて
+
+こんにちは。ダイアモンドヘッド札幌に入社予定の伊藤です。今回は研修課題で取り組んでいるRuby Koansの中から、classについて書かせていただきます。
+
+僕は大学でのデータ処理のために少しpythonを使うことがある程度で、classを活用したことはありませんでした。そのためclassに関する問題でかなり苦労しました。
+その中でも以下の問題(204番)を解決するのに一番時間がかかったのでそれについて書いてみます。
+
+
+    問題
+
+問題204番は次のようなコードからできています。
+
+$ class Dog7
+$   attr_reader :name
+
+$   def initialize(initial_name)
+$     @name = initial_name
+$   end
+
+$   def get_self
+$     self
+$   end
+
+$   def to_s
+$     @name
+$   end
+
+$   def inspect
+$     "<Dog named '#{name}'>"
+$   end
+$ end
+
+$ def test_inside_a_method_self_refers_to_the_containing_object
+$   fido = Dog7.new("Fido")
+
+$   fidos_self = fido.get_self
+$   assert_equal __, fidos_self
+$ end
+
+下から2行目のassert_equalの次の「__」に正しい答えを書くと次に進めるという問題です。上で定義されたDog7の中身を読み、その挙動を考えていきます。
+
+
+    問題の解説
+
+まずはクラスの定義から見ていきます。
+1, attr_readerはインスタンス変数のゲッターです。
+
+2, initializeメソッドはオブジェクトが作成される時に自動的に呼び出されます。ここでは新しいオブジェクトを作ったときに、引数を@nameに格納します。@のついた変数をインスタンス変数といい、同じインスタンス内であればメソッドを超えて扱えます。
+3, get_selfはselfを返します。ここが最後まで分からなかった箇所なので後述。
+
+4, to_sメソッドは、普通はオブジェクトを文字列にして返すメソッドですが、ここではnameを返すものとして定義しています。
+
+5, inspectは一般に、オブジェクトをわかりやすい文字列にして返します。#<クラス名:0x16進数 @インスタンス変数名=値, ...>という文字列が返ります。ここではそれを上書きして、<Dog named '#{name}'>を返すように定義しています。
+
+次に問題となっているtest_inside_a_method_self_refers_to_the_containing_objectの中身を見ていきます。
+1, fidoにDog7の新しいインスタンスを格納し、nameは'Fido'とします。
+
+2, 次はfidos_selfに.get_selfでselfを代入します。
+
+3, そしてfidos_selfとは何かを調べて答えるという問題です。
+
+
+    解答
+
+Ruby Koansは毎回ヒント(というか答え？)をくれます。
+$ Expected "FILL ME IN" to equal <Dog named 'Fido'>
+これに従い、"<Dog named 'Fido'>"と回答しましたが、正解ではないようです。
+しばらく悩んでもわからないので、グーグルさんに聞いてみます。すると以下のstackoverflowが見つかりました。
+https://stackoverflow.com/questions/32666702/ruby-koans-quest-203about-classes-failed-with-rake
+
+これによると、答えはfidoらしい。それを踏まえてコードを見なおしてみると、selfはインスタンスそのものを返すのだろうという予想ができます。二つのobject idを表示してみると、
+$ fido : 14576340, fidos_self : 14576340
+同じidだということが分かります。ということはfido==fidos_selfであり、答はfidoとなります。
+
+Koansはゲーム感覚で問題に取り組み、知らないうちに少しずつ理解が深まってくるいい教材だと思うので、頑張って取り組んでいこうと思います！
+
+
+    おまけ
+
+ここで一つ疑問だったのが、「なぜヒントが<Dog named 'Fido'>なのか」という点です。その答えはassert_equalの定義にありました。neo.rbというファイルの中にあるassert_equalの定義は、
+
+> def assert_equal(expected, actual, msg=nil)
+>   msg ||= "Expected #{expected.inspect} to equal #{actual.inspect}"
+>   assert(expected == actual, msg)
+> end
+
+この2行目を見ると、メッセージとして、オブジェクトのinspectを表示する仕様になっています。だからヒントにはDog7クラスで定義したinspectの内容が表示されるという訳です。
