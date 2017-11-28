@@ -10,32 +10,32 @@ RubyKoans classについて
 
 問題204番は次のようなコードからできています。
 
-$ class Dog7
-$   attr_reader :name
+class Dog7
+  attr_reader :name
 
-$   def initialize(initial_name)
-$     @name = initial_name
-$   end
+  def initialize(initial_name)
+    @name = initial_name
+  end
 
-$   def get_self
-$     self
-$   end
+  def get_self
+    self
+  end
 
-$   def to_s
-$     @name
-$   end
+  def to_s
+    @name
+  end
 
-$   def inspect
-$     "<Dog named '#{name}'>"
-$   end
-$ end
+  def inspect
+    "<Dog named '#{name}'>"
+  end
+end
 
-$ def test_inside_a_method_self_refers_to_the_containing_object
-$   fido = Dog7.new("Fido")
+def test_inside_a_method_self_refers_to_the_containing_object
+  fido = Dog7.new("Fido")
 
-$   fidos_self = fido.get_self
-$   assert_equal __, fidos_self
-$ end
+  fidos_self = fido.get_self
+  assert_equal __, fidos_self
+end
 
 下から2行目のassert_equalの次の「__」に正しい答えを書くと次に進めるという問題です。上で定義されたDog7の中身を読み、その挙動を考えていきます。
 
@@ -79,9 +79,9 @@ Koansはゲーム感覚で問題に取り組み、知らないうちに少しず
 
 ここで一つ疑問だったのが、「なぜヒントが<Dog named 'Fido'>なのか」という点です。その答えはassert_equalの定義にありました。neo.rbというファイルの中にあるassert_equalの定義は、
 
-> def assert_equal(expected, actual, msg=nil)
->   msg ||= "Expected #{expected.inspect} to equal #{actual.inspect}"
->   assert(expected == actual, msg)
-> end
+def assert_equal(expected, actual, msg=nil)
+  msg ||= "Expected #{expected.inspect} to equal #{actual.inspect}"
+  assert(expected == actual, msg)
+end
 
 この2行目を見ると、メッセージとして、オブジェクトのinspectを表示する仕様になっています。だからヒントにはDog7クラスで定義したinspectの内容が表示されるという訳です。
