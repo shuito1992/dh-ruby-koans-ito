@@ -1,0 +1,34 @@
+Ruby Koansを初心者文系が解いていく2 - Proxy Object
+
+こんにちは。ダイアモンドヘッド札幌に入社予定の伊藤です。年の瀬ではありますが、僕は修士論文に追われて慌ただしく過ごしています。
+
+今回は引き続きKoans(http://rubykoans.com/)に取り組む中で難しいと感じた問題を解説してみようと思います。
+@about_proxy_object_projectという問題群の中で、method_missingメソッドを定義するところです。
+正解のコードは以下の通り(一部省略しています)。
+
+01| class Proxy
+02|   attr_reader :messages
+03| 
+04|   def initialize(target_object)
+05|     @object = target_object
+06|     @messages = []
+07|   end
+08| 
+09|   def method_missing(method_name, *args, &block)
+10|     if @object.respond_to?(method_name) then
+11|       @messages.push(method_name)
+12|       @object.send(method_name,*args)
+13|     else
+14|       super(method_name, *args, &block)
+15|     end
+16|   end
+17| end
+
+2行目でまずインスタンス変数を読みだすためのメソッドを定義します。
+4―7行では、新しいオブジェクトを作成したときに、@objectに第一引数target_objectを格納し、@messagesに空のarrayを格納します。
+9-16行ではrespond_to?を用いて、第一引数method_nameが@object内のオブジェクトに定義されているメソッドかどうかをチェックしています。
+trueが返ってきたら、@messagesにmethod_nameを追加し、sendを使って@objectのもとで実行します。
+falseが返ってきたら、superメソッドを実行します。superメソッドはオーバーライドする前のもとのメソッドを呼び出します。ここではmethod_missingです。元のmethod_missingによってNoMethodErrorの例外が発生します。
+
+
+一通りRuby Koansをやり終えましたが、理解が曖昧な部分もたくさんあるため調べて復習していきたいと思います！
